@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mymagicclock"
+version = "0.1.0"
+description = ""
+authors = ["Stefan Jacobs <stefan.jacobs@deutschebahn.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.28.2"
+pyyaml = "^6.0"
+ics = "^0.7.2"
+pytz = "^2023.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

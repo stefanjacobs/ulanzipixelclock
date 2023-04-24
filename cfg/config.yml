@@ -1,0 +1,24 @@
+log-level: DEBUG # WARNING, DEBUG
+timeout: 10
+showtime: 30
+sleepinterval: 120
+sleep:
+  start:
+    hour: 6
+    minute: 0
+  end: 
+    hour: 22
+    minute: 0
+show:
+  - bkw:
+    name: "bkw"
+    uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
+  - em3:
+    name: "em3"
+    uri: "http://192.168.50.179/status"
+  - trash:
+    name: "trash"
+  - clock:
+    name: "clock"
+ulanzi:
+  uri: http://192.168.50.131/api/screen
