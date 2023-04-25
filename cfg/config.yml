@@ -20,6 +20,8 @@ show:
     name: "trash"
   - advent:
     name: "advent"
+  - birthday:
+    name: "birthday"
   - clock:
     name: "clock"
 ulanzi:
