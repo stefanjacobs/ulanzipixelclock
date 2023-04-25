@@ -60,8 +60,11 @@ def getTrashTomorrow():
 
 
 def getTrashToday():
+    now = datetime.datetime.now()
     today = datetime.date.today()
     trash = []
+    if now.time() > datetime.time(hour=12, minute=00):
+        return trash
     for event in calendar.events:
         if event.begin.date() == today:
             if "gelb" in event.name.lower():
