@@ -23,4 +23,5 @@ def update(config):
         },
     }
     response = requests.post(uri, headers=headers, json=json_data)
+    response.raise_for_status()  # Wirft eine Ausnahme für einen Fehler in der HTTP-Antwort
     return True

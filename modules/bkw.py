@@ -37,13 +37,14 @@ def updateUlanzi(config, watt):
             'hexColor': GREEN,
         },
     }
-    # TODO: error handling
     response = requests.post(uri, headers=headers, json=json_data)
+    response.raise_for_status()  # Wirft eine Ausnahme für einen Fehler in der HTTP-Antwort
+    return
 
 
 def getWattReading(step):
-    # TODO: error handling
     response = requests.get(step["uri"])
+    response.raise_for_status()  # Wirft eine Ausnahme für einen Fehler in der HTTP-Antwort
     response = json.loads(response.text)
     return response["switch:0"]["apower"]
 

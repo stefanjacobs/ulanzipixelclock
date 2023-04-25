@@ -73,5 +73,4 @@ json_data = {
         },
     }
 }
-# TODO: error handling
 response = requests.post('http://192.168.50.131/api/screen', headers=headers, json=json_data)
