@@ -65,6 +65,8 @@ def update(config):
     christmas = [datetime.date(today.year, month=12, day=24), datetime.date(today.year, month=12, day=25), datetime.date(today.year, month=12, day=26)]
     silvester = [datetime.date(today.year, month=12, day=31), datetime.date(today.year, month=1, day=1)]
 
+    # today = today.replace(year=2023, month=12, day=31)
+
     if today.date() in silvester:
         updateUlanzi(config, random.choice(silvesterPics))
         return True
