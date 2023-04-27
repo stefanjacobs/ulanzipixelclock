@@ -77,6 +77,8 @@ def getTrashToday():
                 trash.append(trashGrayRed)
             elif "biotonne" in event.name.lower():
                 trash.append(trashBrown)
+            elif "papiertonne" in event.name.lower():
+                trash.append(trashBlue)
     return trash
 
 
