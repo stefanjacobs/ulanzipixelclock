@@ -2,7 +2,7 @@
 
 ## Idee
 
-Nutzung einer PixelIt Display Anzeige, die per REST ansprechbar ist und Belieferung der Anzeige über einen zentralen Server, bei mir ein Raspberry Pi. Das Skript sammelt auf Basis von REST Endpunkten im WiFi die benötigten Daten live ein und stellt diese darf.
+Nutzung einer PixelIt Display Anzeige, die per REST ansprechbar ist und Belieferung der Anzeige über einen zentralen Server, bei mir ein Raspberry Pi. Das Skript sammelt auf Basis von REST Endpunkten im WiFi die benötigten Daten live ein und stellt diese dar.
 
 ### Links
 
@@ -15,11 +15,13 @@ Nutzung einer PixelIt Display Anzeige, die per REST ansprechbar ist und Beliefer
 Rotation im 30 Sekunden Takt der folgenden Screens:
 
 - Uhr (Uhrzeit, Datum) im Wechsel a 10 sekunden
-- Wetter für heute nachmittag
+- Wetter für heute (tbd)
 - Solarerzeugung BKW jetzt
-- Solarerzeugung Haus
+- Solarerzeugung Haus (tbd)
 - Energieverbrauch im Haus jetzt
-- Energiebilanz gesamt
+- Energiebilanz gesamt (tbd)
+- Adventsbilder und Weihnachtsbilder, wenn das zeitlich zutrifft
+- Geburtstags und Vater-/Muttertagsbilder, wenn das zeitlich zutrifft
 - Müll (wenn morgen Müll abgefahren wird)
   - Müll für heute
   - Müll für morgen
@@ -31,6 +33,8 @@ Rahmenbedingungen:
 ## Beispielbilder
 
 ### Aktuelle Leistung Balkonkraftwerk
+
+Sobald keine Leistung erzeugt wird, wird auch nichts angezeigt.
 
 ![Aktuelle Leistung BKW](./docs/pics/bkw.png)
 
@@ -45,6 +49,8 @@ Orange ist Verbrauch, Grün ist Einspeisung
 ![Beispielbild der Pixeluhr](./docs/pics/clock.png)
 
 ### Müllanzeige (links heute, rechts morgen)
+
+Wenn heute und morgen kein Müll fällig ist, wird nichts angezeigt. Der Müll für heute wird nur bis 12 Uhr angezeigt, danach machts keinen Sinn mehr. Was weg ist, ist weg...
 
 ![Beispielbild der Mülltonne](./docs/pics/trash.png)
 

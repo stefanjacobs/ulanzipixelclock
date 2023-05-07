@@ -54,7 +54,7 @@ def formatValue(val):
     val = round(val)
     # check color of reading
     color = ORANGE
-    if val < 0:
+    if val <= 0:
         color = GREEN
         val = abs(val)
     

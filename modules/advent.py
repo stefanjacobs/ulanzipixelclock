@@ -26,6 +26,7 @@ def updateUlanzi(config, pic):
         'Content-Type': 'application/json',
     }
     json_data = {
+        'sleepMode': False,
         'switchAnimation': {
             'aktiv': True,
             'animation': 'random',
