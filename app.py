@@ -8,6 +8,7 @@ import modules.trash as trash
 import modules.sleep as sleep
 import modules.advent as advent
 import modules.birthday as birthday
+import modules.washing as washing
 
 
 logging.basicConfig()
@@ -27,6 +28,8 @@ def singlestep(config, step):
         return advent.update(config)
     if step["name"] == "birthday":
         return birthday.update(config)
+    if step["name"] == "washing":
+        return washing.update(config, step)
 
     log.error("Something strange happened, the singlestep failed and no exception was thrown")
     raise Exception("Singlestep failed, none of the above status checks succeeded. Should not happen.")

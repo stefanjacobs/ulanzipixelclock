@@ -82,10 +82,10 @@ def getTrashToday():
     return trash
 
 
-def mergeTrashes(trash):
+def mergePics(pics):
     result = []
     for i in range(8):
-        for t in trash:
+        for t in pics:
             for x in range(i*8, (i+1)*8):
                 result.append(t[x])
     return result
@@ -109,7 +109,7 @@ def update(config, step):
     for t in trashTomorrow:
         trash.append(t)
 
-    trash = mergeTrashes(trash)
+    trash = mergePics(trash)
     updateUlanzi(config, trash)
     return True
 
