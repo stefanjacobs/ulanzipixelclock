@@ -71,6 +71,8 @@ def formatValue(val):
 
 def update(config, step):
     currentVal = getWattReading(step)
+    if abs(currentVal) < 50:
+        return False
     value, color = formatValue(currentVal)
     updateUlanzi(config, value, color)
     return True
