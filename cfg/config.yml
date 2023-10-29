@@ -10,12 +10,6 @@ uptime:
     minute: 0
   sleepinterval: 120
 show:
-  - washing:
-    name: "washing"
-    dryer-uri: "http://192.168.50.192/rpc/Shelly.GetStatus"
-    wash-uri: "http://192.168.50.2/rpc/Shelly.GetStatus"
-    power-off-threshold: 1    # Watts
-    idle-threshold: 10        # Watts
   - bkw:
     name: "bkw"
     uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
@@ -28,6 +22,12 @@ show:
     name: "advent"
   - birthday:
     name: "birthday"
+  - washing:
+    name: "washing"
+    dryer-uri: "http://192.168.50.192/rpc/Shelly.GetStatus"
+    wash-uri: "http://192.168.50.2/rpc/Shelly.GetStatus"
+    power-off-threshold: 1    # Watts
+    idle-threshold: 10        # Watts
   - clock:
     name: "clock"
 ulanzi:
