@@ -13,15 +13,24 @@ show:
   - bkw:
     name: "bkw"
     uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
+  - pv:
+    name: "pv"
+#  - battery:
+#    name: "battery"
   - em3:
     name: "em3"
     uri: "http://192.168.50.179/status"
+  - wallbox:
+    name: "wallbox"
+#  - car:
+#    name: "car"
   - trash:
     name: "trash"
   - advent:
     name: "advent"
   - birthday:
     name: "birthday"
+    evcc-uri: "http://192.168.50.215:7070/api/state"
   - washing:
     name: "washing"
     dryer-uri: "http://192.168.50.192/rpc/Shelly.GetStatus"
@@ -33,3 +42,7 @@ show:
 ulanzi:
   uri: http://192.168.50.131/api/screen
   info: http://192.168.50.131/api/matrixinfo
+pv:
+  host: "192.168.50.196"
+  port: 502
+  slave_id: 1
