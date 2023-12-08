@@ -1,9 +1,26 @@
-import requests, pv
+import requests
+import modules.pv
 
 GREEN = "#32612D"
 ORANGE = "#ff781f"
 
-def updateUlanzi(config, watt, color):
+
+FULL_AKKU = [0,0,65535,65535,65535,65535,0,0,0,0,65535,2016,2016,65535,0,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_90 = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_70 = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,0,0,0,0,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_50 = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_30 = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,65504,65504,65504,65504,65535,0,0,65535,65504,65504,65504,65504,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_10 = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,64512,64512,64512,64512,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+AKKU_EMPTY = [0,0,65535,65535,65535,65535,0,0,0,0,65535,0,0,65535,0,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,0,0,0,0,65535,0,0,65535,65535,65535,65535,65535,65535,0]
+
+
+def updateUlanzi(config, watt, color, pic):
     uri = config.get("ulanzi.uri")
     headers = {
         'Content-Type': 'application/json',
@@ -15,7 +32,7 @@ def updateUlanzi(config, watt, color):
             'animation': 'fade',
         },
         'bitmap': {
-            'data': [0,0,65535,65535,65535,65535,0,0,0,0,65535,2016,2016,65535,0,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,2016,2016,2016,2016,65535,0,0,65535,65535,65535,65535,65535,65535,0],
+            'data': pic,
             'position': {
                 'x': 0,
                 'y': 0,
@@ -46,9 +63,9 @@ def formatValue(val):
     val = round(val)
     # check color of reading
     color = ORANGE
-    if val <= 0:
+    if val >= 0:
         color = GREEN
-        val = abs(val)
+    val = abs(val)
     
     # check, if W or kW
     einheit = "W"
@@ -63,22 +80,37 @@ def formatValue(val):
 
 def update(config, step):
 
-    currentData = pv.currentData
+    currentData = modules.pv.currentData
 
-    showSOC = str(currentData["storage_state_of_capacity"].value) + currentData["storage_state_of_capacity"].unit
+    if currentData is None:
+        return False
 
     # chargeDischarge scheint Positiv Batterie laden zu sein, negativ entladen
     chargeDischarge = currentData["storage_charge_discharge_power"].value
+    soc = currentData["storage_state_of_capacity"].value
     
-    if currentData["storage_state_of_capacity"].value >= 80.0 and chargeDischarge == 0:
+    if currentData["storage_state_of_capacity"].value >= 95.0 and chargeDischarge == 0:
         return False
     
     if currentData["storage_state_of_capacity"].value <= 5.0 and chargeDischarge == 0:
         return False
     
-    _, color = formatValue(chargeDischarge)
-    
-    updateUlanzi(config, showSOC, color)
+    pic = FULL_AKKU
+    if soc >= 90:
+        pic = FULL_AKKU
+    elif soc >= 70:
+        pic = AKKU_90
+    elif soc >= 50:
+        pic = AKKU_70
+    elif soc >= 30:
+        pic = AKKU_50
+    elif soc >= 10:
+        pic = AKKU_30
+    else:
+        pic = AKKU_10
+
+    value, color = formatValue(chargeDischarge)
+    updateUlanzi(config, value, color, pic)
     return True
     
     # zeige batterie daten an:

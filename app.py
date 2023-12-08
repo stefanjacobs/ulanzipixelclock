@@ -9,6 +9,8 @@ import modules.sleep as sleep
 import modules.advent as advent
 import modules.birthday as birthday
 import modules.washing as washing
+import modules.pv as pv
+import modules.battery as battery
 
 
 logging.basicConfig()
@@ -18,6 +20,10 @@ log = logging.getLogger(__name__)
 def singlestep(config, step):
     if step["name"] == "clock":
         return clock.update(config)
+    if step["name"] == "pv":
+        return pv.update(config, step)
+    if step["name"] == "battery":
+        return battery.update(config, step)
     if step["name"] == "em3":
         return em3.update(config, step)
     if step["name"] == "bkw":
@@ -74,7 +80,7 @@ def mainloop(config: Config):
                 print("Skipping " + steps[current]["name"])
         except Exception as e:
             log.error(e)
-            log.warn("Program is ignoring the error and continues.")
+            log.warning("Program is ignoring the error and continues.")
         finally:
             current = (current + 1) % maxSteps
 

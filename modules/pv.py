@@ -84,7 +84,7 @@ def update(config, _step):
 
     currentData = data
 
-    if data["input_power"] == 0:
+    if data["input_power"].value == 0:
         return False
     
     value = formatValue(data["input_power"].value)

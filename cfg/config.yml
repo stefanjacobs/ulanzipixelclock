@@ -15,15 +15,15 @@ show:
     uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
   - pv:
     name: "pv"
-#  - battery:
-#    name: "battery"
+  - battery:
+    name: "battery"
   - em3:
     name: "em3"
     uri: "http://192.168.50.179/status"
-  - wallbox:
-    name: "wallbox"
-#  - car:
-#    name: "car"
+# - wallbox:
+#   name: "wallbox"
+# - car:
+#   name: "car"
   - trash:
     name: "trash"
   - advent:
