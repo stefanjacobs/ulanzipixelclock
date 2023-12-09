@@ -1,4 +1,8 @@
 import requests
+import threading, queue
+from huawei_solar import HuaweiSolarBridge
+import asyncio
+
 
 GREEN = "#32612D"
 
@@ -41,24 +45,41 @@ def updateUlanzi(config, watt):
     response.raise_for_status()
 
 
-from huawei_solar import HuaweiSolarBridge
-import asyncio
+class BridgeReader(threading.Thread):    
+    
+    currentData = None
 
-async def init():
-    from config import Config
-    c = Config()
-    host = c.get("pv.host")
-    port = c.get("pv.port")
-    slave_id = c.get("pv.slave_id")
-    return await HuaweiSolarBridge.create(host=host, port=port, slave_id=slave_id)
+    async def initBridge(self):
+        from config import Config
+        c = Config()
+        host = c.get("pv.host")
+        port = c.get("pv.port")
+        slave_id = c.get("pv.slave_id")
+        return await HuaweiSolarBridge.create(host=host, port=port, slave_id=slave_id)
+    
+    async def getData(self, bridge):
+        return await bridge.update()
 
-async def getData(bridge):
-    return await bridge.update()
+    def __init__(self, name):
+        super().__init__(name=name)
+    
+    def run(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        
+        self.bridge = self.loop.run_until_complete(self.initBridge())
+
+        while True:
+            try:
+                self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
+                self.loop.run_until_complete(asyncio.sleep(30))   
+            except Exception as e:
+                self.bridge = self.loop.run_until_complete(self.initBridge())
+            # print("Data:", data)  # Hier kannst du die Daten entsprechend verarbeiten
 
 
-loop = asyncio.new_event_loop()
-bridge = loop.run_until_complete(init())
-currentData = None
+bridgeReader = BridgeReader("BridgeReader")
+bridgeReader.start()
 
 
 def formatValue(val):
@@ -75,26 +96,24 @@ def formatValue(val):
 
 
 def update(config, _step):
-    global loop, bridge, currentData
-    try:
-        data = loop.run_until_complete(getData(bridge))
-    except Exception as e:
-        bridge = loop.run_until_complete(init())
-        return False
 
-    currentData = data
-
-    if data["input_power"].value == 0:
+    data = bridgeReader.currentData
+    if data is None:
         return False
     
-    value = formatValue(data["input_power"].value)
+    input_power = data["input_power"].value
+
+    if input_power == 0:
+        return False
+    
+    value = formatValue(input_power)
 
     updateUlanzi(config, value)
     return True
 
 
-if __name__ == "__main__":
-    data = loop.run_until_complete(getData(bridge))
-    loop.run_until_complete(bridge.stop())
+# if __name__ == "__main__":
+#     data = loop.run_until_complete(getData(bridge))
+#     loop.run_until_complete(bridge.stop())
 
-    pass
+#     pass

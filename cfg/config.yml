@@ -4,10 +4,10 @@ showtime: 30
 uptime:
   start:
     hour: 6
-    minute: 0
+    minute: 30
   end: 
     hour: 22
-    minute: 0
+    minute: 00
   sleepinterval: 120
 show:
   - bkw:

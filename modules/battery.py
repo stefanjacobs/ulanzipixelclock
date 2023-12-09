@@ -80,7 +80,7 @@ def formatValue(val):
 
 def update(config, step):
 
-    currentData = modules.pv.currentData
+    currentData = modules.pv.bridgeReader.currentData
 
     if currentData is None:
         return False
@@ -89,22 +89,22 @@ def update(config, step):
     chargeDischarge = currentData["storage_charge_discharge_power"].value
     soc = currentData["storage_state_of_capacity"].value
     
-    if currentData["storage_state_of_capacity"].value >= 95.0 and chargeDischarge == 0:
+    if soc >= 95.0 and chargeDischarge == 0:
         return False
     
-    if currentData["storage_state_of_capacity"].value <= 5.0 and chargeDischarge == 0:
+    if soc <= 5.0 and chargeDischarge == 0:
         return False
     
     pic = FULL_AKKU
-    if soc >= 90:
+    if soc >= 85:
         pic = FULL_AKKU
-    elif soc >= 70:
+    elif soc >= 75:
         pic = AKKU_90
-    elif soc >= 50:
+    elif soc >= 55:
         pic = AKKU_70
-    elif soc >= 30:
+    elif soc >= 35:
         pic = AKKU_50
-    elif soc >= 10:
+    elif soc >= 15:
         pic = AKKU_30
     else:
         pic = AKKU_10
