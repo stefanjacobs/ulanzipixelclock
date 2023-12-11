@@ -72,7 +72,8 @@ class BridgeReader(threading.Thread):
         while True:
             try:
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
-                self.loop.run_until_complete(asyncio.sleep(30))   
+                print("Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
+                self.loop.run_until_complete(asyncio.sleep(61))   
             except Exception as e:
                 self.bridge = self.loop.run_until_complete(self.initBridge())
             # print("Data:", data)  # Hier kannst du die Daten entsprechend verarbeiten
