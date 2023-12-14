@@ -51,6 +51,7 @@ def updateUlanzi(config, watt):
 class BridgeReader(threading.Thread):    
     
     currentData = None
+    stopThread = False
 
     async def initBridge(self):
         from config import Config
@@ -70,7 +71,7 @@ class BridgeReader(threading.Thread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
         
-        while True:
+        while not self.stopThread:
             try:
                 self.bridge = self.loop.run_until_complete(self.initBridge())
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
@@ -78,7 +79,7 @@ class BridgeReader(threading.Thread):
                 timestamp = time.time()
                 formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
                 print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
-                self.loop.run_until_complete(asyncio.sleep(47))
+                self.loop.run_until_complete(asyncio.sleep(37))
             except Exception as e:
                 print(str(formatted_timestamp) + " - Exception while talking to modbus client: " + str(e))
 

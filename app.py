@@ -16,6 +16,25 @@ import modules.battery as battery
 logging.basicConfig()
 log = logging.getLogger(__name__)
 
+import signal
+import time
+
+
+class GracefulKiller:
+    kill_now = False
+
+    def __init__(self):
+        signal.signal(signal.SIGINT, self.exit_gracefully)
+        signal.signal(signal.SIGTERM, self.exit_gracefully)
+
+    def exit_gracefully(self, *args):
+        print("Received ending signal, trying to join. Please wait ~1 min")
+        pv.bridgeReader.stopThread = True
+        pv.bridgeReader.join()
+        self.kill_now = True
+        print("Killer: Done! Good bye!")
+
+
 
 def singlestep(config, step):
     if step["name"] == "clock":
@@ -37,24 +56,31 @@ def singlestep(config, step):
     if step["name"] == "washing":
         return washing.update(config, step)
 
-    log.error("Something strange happened, the singlestep failed and no exception was thrown")
-    raise Exception("Singlestep failed, none of the above status checks succeeded. Should not happen.")
+    log.error(
+        "Something strange happened, the singlestep failed and no exception was thrown"
+    )
+    raise Exception(
+        "Singlestep failed, none of the above status checks succeeded. Should not happen."
+    )
 
 
-def mainloop(config: Config):
+def mainloop(config: Config, killer: GracefulKiller):
     steps = config.get("show")
     maxSteps = len(steps)
     current = 0
     sleepStart = config.get("uptime.start")
     sleepEnd = config.get("uptime.end")
     sleepInterval = config.get("uptime.sleepinterval")
-    tz = pytz.timezone('Europe/Berlin') 
+    tz = pytz.timezone("Europe/Berlin")
 
-    while (True):
+    while not killer.kill_now:
         now = datetime.datetime.now(tz)
         start = now.replace(hour=sleepStart["hour"], minute=sleepStart["minute"])
         end = now.replace(hour=sleepEnd["hour"], minute=sleepEnd["minute"])
-        wake_time = now.replace(hour=sleepStart["hour"], minute=sleepStart["minute"] + int(sleepInterval/60))
+        wake_time = now.replace(
+            hour=sleepStart["hour"],
+            minute=sleepStart["minute"] + int(sleepInterval / 60),
+        )
         try:
             result = False
             if not (start <= now and now <= end):
@@ -62,11 +88,11 @@ def mainloop(config: Config):
                 sleep.sleepUlanzi(config)
                 wait(sleepInterval)
                 continue
-            
+
             if start <= now and now <= wake_time:
                 print("Should wake up when in wake up time")
                 sleep.wakeUp(config)
-    
+
             if (sleep.statusUlanziSleeping(config)) == True:
                 print("Manual Sleeping")
                 wait(sleepInterval)
@@ -86,6 +112,7 @@ def mainloop(config: Config):
 
 
 if __name__ == "__main__":
+    killer = GracefulKiller()
     config = Config("cfg/config.yml")
     log.setLevel(config.get("log-level"))
-    mainloop(config)
+    mainloop(config, killer)
