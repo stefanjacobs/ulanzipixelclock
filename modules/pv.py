@@ -1,8 +1,11 @@
 import requests
-import threading, queue
-from huawei_solar import HuaweiSolarBridge
+import threading, time
+from datetime import datetime
+# from huawei_solar import HuaweiSolarBridge
+import huawei_solar
 import asyncio
 
+huawei_solar.WAIT_FOR_CONNECTION_TIMEOUT = 10
 
 GREEN = "#32612D"
 
@@ -55,7 +58,7 @@ class BridgeReader(threading.Thread):
         host = c.get("pv.host")
         port = c.get("pv.port")
         slave_id = c.get("pv.slave_id")
-        return await HuaweiSolarBridge.create(host=host, port=port, slave_id=slave_id)
+        return await huawei_solar.HuaweiSolarBridge.create(host=host, port=port, slave_id=slave_id)
     
     async def getData(self, bridge):
         return await bridge.update()
@@ -67,16 +70,17 @@ class BridgeReader(threading.Thread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
         
-        self.bridge = self.loop.run_until_complete(self.initBridge())
-
         while True:
             try:
-                self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
-                print("Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
-                self.loop.run_until_complete(asyncio.sleep(43))   
-            except Exception as e:
                 self.bridge = self.loop.run_until_complete(self.initBridge())
-            # print("Data:", data)  # Hier kannst du die Daten entsprechend verarbeiten
+                self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
+                self.loop.run_until_complete(self.bridge.client.stop())
+                timestamp = time.time()
+                formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+                print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
+                self.loop.run_until_complete(asyncio.sleep(47))
+            except Exception as e:
+                print(str(formatted_timestamp) + " - Exception while talking to modbus client: " + str(e))
 
 
 bridgeReader = BridgeReader("BridgeReader")
