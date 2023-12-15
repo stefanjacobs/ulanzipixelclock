@@ -73,13 +73,17 @@ class BridgeReader(threading.Thread):
         
         while not self.stopThread:
             try:
+                formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
                 self.bridge = self.loop.run_until_complete(self.initBridge())
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
                 self.loop.run_until_complete(self.bridge.client.stop())
                 timestamp = time.time()
-                formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
                 print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
-                self.loop.run_until_complete(asyncio.sleep(37))
+
+                if self.currentData["input_power"].value == 0 and self.currentData["storage_state_of_capacity"].value == 0:
+                    self.loop.run_until_complete(asyncio.sleep(300))
+                else:
+                    self.loop.run_until_complete(asyncio.sleep(37))
             except Exception as e:
                 print(str(formatted_timestamp) + " - Exception while talking to modbus client: " + str(e))
 
