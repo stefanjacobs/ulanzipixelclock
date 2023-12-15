@@ -72,8 +72,8 @@ class BridgeReader(threading.Thread):
         asyncio.set_event_loop(self.loop)
         
         while not self.stopThread:
+            formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
             try:
-                formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
                 self.bridge = self.loop.run_until_complete(self.initBridge())
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
                 self.loop.run_until_complete(self.bridge.client.stop())
