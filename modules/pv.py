@@ -72,12 +72,12 @@ class BridgeReader(threading.Thread):
         asyncio.set_event_loop(self.loop)
         
         while not self.stopThread:
+            timestamp = time.time()
             formatted_timestamp = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
             try:
                 self.bridge = self.loop.run_until_complete(self.initBridge())
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
                 self.loop.run_until_complete(self.bridge.client.stop())
-                timestamp = time.time()
                 print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
 
                 if self.currentData["input_power"].value == 0 and self.currentData["storage_state_of_capacity"].value == 0:
