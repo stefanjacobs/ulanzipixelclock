@@ -89,10 +89,10 @@ def update(config, step):
     chargeDischarge = currentData["storage_charge_discharge_power"].value
     soc = currentData["storage_state_of_capacity"].value
     
-    if soc >= 95.0 and chargeDischarge == 0:
+    if soc >= 85.0 and chargeDischarge == 0:
         return False
     
-    if soc <= 5.0 and chargeDischarge == 0:
+    if soc <= 15.0 and chargeDischarge == 0:
         return False
     
     pic = FULL_AKKU
