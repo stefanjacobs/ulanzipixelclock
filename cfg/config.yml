@@ -31,7 +31,6 @@ show:
     name: "advent"
   - birthday:
     name: "birthday"
-    evcc-uri: "http://192.168.50.215:7070/api/state"
   - washing:
     name: "washing"
     dryer-uri: "http://192.168.50.192/rpc/Shelly.GetStatus"
