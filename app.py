@@ -11,6 +11,7 @@ import modules.birthday as birthday
 import modules.washing as washing
 import modules.pv as pv
 import modules.battery as battery
+import modules.wallbox as wallbox
 
 
 logging.basicConfig()
@@ -55,6 +56,8 @@ def singlestep(config, step):
         return birthday.update(config)
     if step["name"] == "washing":
         return washing.update(config, step)
+    if step["name"] == "wallbox":
+        return wallbox.update(config, step)
 
     log.error(
         "Something strange happened, the singlestep failed and no exception was thrown"

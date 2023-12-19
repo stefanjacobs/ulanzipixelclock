@@ -81,7 +81,7 @@ class BridgeReader(threading.Thread):
                 print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
 
                 if self.currentData["input_power"].value == 0 and self.currentData["storage_charge_discharge_power"].value == 0:
-                    self.loop.run_until_complete(asyncio.sleep(300))
+                    self.loop.run_until_complete(asyncio.sleep(67))
                 else:
                     self.loop.run_until_complete(asyncio.sleep(37))
             except Exception as e:

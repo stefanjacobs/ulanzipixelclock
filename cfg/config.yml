@@ -20,8 +20,9 @@ show:
   - em3:
     name: "em3"
     uri: "http://192.168.50.179/status"
-# - wallbox:
-#   name: "wallbox"
+  - wallbox:
+    name: "wallbox"
+    evcc-uri: "http://192.168.50.253:7070/api/state"
 # - car:
 #   name: "car"
   - trash:
