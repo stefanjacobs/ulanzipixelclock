@@ -19,7 +19,11 @@ import modules.wallbox as wallbox
 import modules.car as car
 
 
-logging.basicConfig()
+logging.basicConfig(
+    level=logging.INFO,  # Wählen Sie den gewünschten Log-Level aus (DEBUG, INFO, WARNING, ERROR, etc.)
+    format='%(asctime)s %(levelname)s: %(message)s',  # Hinzufügen des Zeitstempels
+    datefmt='%Y-%m-%d %H:%M:%S'  # Format des Zeitstempels
+)
 log = logging.getLogger(__name__)
 
 import signal
@@ -34,11 +38,11 @@ class GracefulKiller:
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
     def exit_gracefully(self, *args):
-        print("Received ending signal, trying to join. Please wait ~1 min")
+        log.info("Received ending signal, trying to join. Please wait ~1 min")
         pv.bridgeReader.stopThread = True
         pv.bridgeReader.join()
         self.kill_now = True
-        print("Killer: Done! Good bye!")
+        log.info("Killer: Done! Good bye!")
 
 
 
@@ -108,12 +112,12 @@ def mainloop(config: Config, killer: GracefulKiller):
                 wait(sleepInterval)
                 continue
 
-            # print("Stepping into " + steps[current]["name"])
+            log.info("Stepping into " + steps[current]["name"])
             result = singlestep(config, steps[current])
             if result == True:
                 wait(config.get("showtime"))
             else:
-                # print("Skipping " + steps[current]["name"])
+                log.info("Skipping " + steps[current]["name"])
                 pass
         except Exception as e:
             log.error(e)
