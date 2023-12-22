@@ -12,6 +12,8 @@ pyyaml = "^6.0"
 ics = "^0.7.2"
 pytz = "^2023.3"
 huawei-solar = "^2.2.9"
+weconnect = "^0.59.5"
+python-dotenv = "^1.0.0"
 
 
 [build-system]

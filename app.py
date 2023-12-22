@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import logging, datetime, pytz
 from config import Config
 from sleeprange import wait
@@ -12,13 +16,14 @@ import modules.washing as washing
 import modules.pv as pv
 import modules.battery as battery
 import modules.wallbox as wallbox
+import modules.car as car
 
 
 logging.basicConfig()
 log = logging.getLogger(__name__)
 
 import signal
-import time
+
 
 
 class GracefulKiller:
@@ -58,6 +63,8 @@ def singlestep(config, step):
         return washing.update(config, step)
     if step["name"] == "wallbox":
         return wallbox.update(config, step)
+    if step["name"] == "car":
+        return car.update(config, step)
 
     log.error(
         "Something strange happened, the singlestep failed and no exception was thrown"
@@ -87,13 +94,13 @@ def mainloop(config: Config, killer: GracefulKiller):
         try:
             result = False
             if not (start <= now and now <= end):
-                print("Should be sleeping!")
+                # print("Should be sleeping!")
                 sleep.sleepUlanzi(config)
                 wait(sleepInterval)
                 continue
 
             if start <= now and now <= wake_time:
-                print("Should wake up when in wake up time")
+                # print("Should wake up when in wake up time")
                 sleep.wakeUp(config)
 
             if (sleep.statusUlanziSleeping(config)) == True:
@@ -101,12 +108,13 @@ def mainloop(config: Config, killer: GracefulKiller):
                 wait(sleepInterval)
                 continue
 
-            print("Stepping into " + steps[current]["name"])
+            # print("Stepping into " + steps[current]["name"])
             result = singlestep(config, steps[current])
             if result == True:
                 wait(config.get("showtime"))
             else:
-                print("Skipping " + steps[current]["name"])
+                # print("Skipping " + steps[current]["name"])
+                pass
         except Exception as e:
             log.error(e)
             log.warning("Program is ignoring the error and continues.")

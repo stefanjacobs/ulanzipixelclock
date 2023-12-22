@@ -4,3 +4,5 @@ poetry.lock
 birthday.py
 dash.*
 .vscode
+.env
+.envrc

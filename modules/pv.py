@@ -78,7 +78,7 @@ class BridgeReader(threading.Thread):
                 self.bridge = self.loop.run_until_complete(self.initBridge())
                 self.currentData = self.loop.run_until_complete(self.getData(self.bridge))
                 self.loop.run_until_complete(self.bridge.client.stop())
-                print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
+                # print(str(formatted_timestamp) + " - Input: " + str(self.currentData["input_power"].value) + " - Battery Charge: " + str(self.currentData["storage_charge_discharge_power"].value)) 
 
                 if self.currentData["input_power"].value == 0 and self.currentData["storage_charge_discharge_power"].value == 0:
                     self.loop.run_until_complete(asyncio.sleep(67))
@@ -86,6 +86,7 @@ class BridgeReader(threading.Thread):
                     self.loop.run_until_complete(asyncio.sleep(37))
             except Exception as e:
                 print(str(formatted_timestamp) + " - Exception while talking to modbus client: " + str(e))
+                time.sleep(60)
 
 
 bridgeReader = BridgeReader("BridgeReader")
