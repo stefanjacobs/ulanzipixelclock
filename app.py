@@ -45,37 +45,26 @@ class GracefulKiller:
         log.info("Killer: Done! Good bye!")
 
 
-
 def singlestep(config, step):
-    if step["name"] == "clock":
-        return clock.update(config)
-    if step["name"] == "pv":
-        return pv.update(config, step)
-    if step["name"] == "battery":
-        return battery.update(config, step)
-    if step["name"] == "em3":
-        return em3.update(config, step)
-    if step["name"] == "bkw":
-        return bkw.update(config, step)
-    if step["name"] == "trash":
-        return trash.update(config, step)
-    if step["name"] == "advent":
-        return advent.update(config)
-    if step["name"] == "birthday":
-        return birthday.update(config)
-    if step["name"] == "washing":
-        return washing.update(config, step)
-    if step["name"] == "wallbox":
-        return wallbox.update(config, step)
-    if step["name"] == "car":
-        return car.update(config, step)
-
-    log.error(
-        "Something strange happened, the singlestep failed and no exception was thrown"
-    )
-    raise Exception(
-        "Singlestep failed, none of the above status checks succeeded. Should not happen."
-    )
+    match step["name"]:
+        case "bkw":         return bkw.update(config, step)
+        case "pv":          return pv.update(config, step)
+        case "battery":     return battery.update(config, step)
+        case "em3":         return em3.update(config, step)
+        case "wallbox":     return wallbox.update(config, step)
+        case "car":         return car.update(config, step)
+        case "trash":       return trash.update(config, step)
+        case "advent":      return advent.update(config)
+        case "birthday":    return birthday.update(config)
+        case "washing":     return washing.update(config, step)
+        case "clock":       return clock.update(config)
+        case _:
+            log.error(
+                "Something strange happened, the singlestep failed and no exception was thrown"
+            )
+            raise Exception(
+                "Singlestep failed, none of the above status checks succeeded. Should not happen."
+            )
 
 
 def mainloop(config: Config, killer: GracefulKiller):
