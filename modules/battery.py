@@ -62,9 +62,9 @@ def updateUlanzi(config, watt, color, pic):
 def formatValue(val):
     val = round(val)
     # check color of reading
-    color = ORANGE
+    color = GREEN
     if val >= 0:
-        color = GREEN
+        color = ORANGE
     val = abs(val)
     
     # check, if W or kW
