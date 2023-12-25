@@ -44,6 +44,7 @@ def updateUlanzi(config, watt, color):
 
 
 def getWattReading(step):
+    response = None
     response = requests.get(step["uri"])
     response.raise_for_status()  # Wirft eine Ausnahme für einen Fehler in der HTTP-Antwort
     response = json.loads(response.text)

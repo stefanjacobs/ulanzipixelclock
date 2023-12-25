@@ -26,24 +26,6 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-import signal
-
-
-
-class GracefulKiller:
-    kill_now = False
-
-    def __init__(self):
-        signal.signal(signal.SIGINT, self.exit_gracefully)
-        signal.signal(signal.SIGTERM, self.exit_gracefully)
-
-    def exit_gracefully(self, *args):
-        log.info("Received ending signal, trying to join. Please wait ~1 min")
-        pv.bridgeReader.stopThread = True
-        pv.bridgeReader.join()
-        self.kill_now = True
-        log.info("Killer: Done! Good bye!")
-
 
 def singlestep(config, step):
     match step["name"]:
@@ -67,7 +49,7 @@ def singlestep(config, step):
             )
 
 
-def mainloop(config: Config, killer: GracefulKiller):
+def mainloop(config: Config):
     steps = config.get("show")
     maxSteps = len(steps)
     current = 0
@@ -76,7 +58,7 @@ def mainloop(config: Config, killer: GracefulKiller):
     sleepInterval = config.get("uptime.sleepinterval")
     tz = pytz.timezone("Europe/Berlin")
 
-    while not killer.kill_now:
+    while True:
         now = datetime.datetime.now(tz)
         start = now.replace(hour=sleepStart["hour"], minute=sleepStart["minute"])
         end = now.replace(hour=sleepEnd["hour"], minute=sleepEnd["minute"])
@@ -86,18 +68,16 @@ def mainloop(config: Config, killer: GracefulKiller):
         )
         try:
             result = False
-            if not (start <= now and now <= end):
-                # print("Should be sleeping!")
+            if not (start <= now and now <= end): # sleep time for ulanzi
                 sleep.sleepUlanzi(config)
                 wait(sleepInterval)
                 continue
 
-            if start <= now and now <= wake_time:
-                # print("Should wake up when in wake up time")
+            if start <= now and now <= wake_time: # it is wake up time!
                 sleep.wakeUp(config)
 
-            if (sleep.statusUlanziSleeping(config)) == True:
-                print("Manual Sleeping")
+            if (sleep.statusUlanziSleeping(config)) == True: # manual sleep at ulanzi case
+                log.info("Manual sleeping")
                 wait(sleepInterval)
                 continue
 
@@ -110,13 +90,12 @@ def mainloop(config: Config, killer: GracefulKiller):
                 pass
         except Exception as e:
             log.error(e)
-            log.warning("Program is ignoring the error and continues.")
+            log.error("Program is ignoring the previous error and continues.")
         finally:
             current = (current + 1) % maxSteps
 
 
 if __name__ == "__main__":
-    killer = GracefulKiller()
     config = Config("cfg/config.yml")
     log.setLevel(config.get("log-level"))
-    mainloop(config, killer)
+    mainloop(config)

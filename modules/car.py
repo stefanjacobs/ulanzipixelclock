@@ -47,8 +47,6 @@ def updateUlanzi(config, text):
 VW_USERNAME=os.getenv("VW_USER")
 VW_PASSWORD=os.getenv("VW_PASS")
 
-# print(VW_PASSWORD + " - " + VW_USERNAME)
-
 counter = 0
 
 LOG = logging.getLogger("weconnect")
@@ -60,8 +58,7 @@ weConnect = weconnect.WeConnect(username=VW_USERNAME, password=VW_PASSWORD, upda
 def update(config, step):
 
     global counter
-    counter += 1
-    counter %= 2
+    counter = (counter + 1) % 2
 
     weConnect.update(updatePictures=False, updateCapabilities=False)
 

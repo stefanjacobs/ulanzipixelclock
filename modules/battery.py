@@ -1,5 +1,5 @@
-import requests
-import modules.pv
+import requests, json
+
 
 GREEN = "#32612D"
 ORANGE = "#ff781f"
@@ -78,16 +78,27 @@ def formatValue(val):
     return value, color
 
 
+def getReading(step):
+    response = None
+    response = requests.get(step["evcc-uri"])
+    response.raise_for_status()  # Wirft eine Ausnahme für einen Fehler in der HTTP-Antwort
+    response = json.loads(response.text)
+    return response
+
+
 def update(config, step):
 
-    currentData = modules.pv.bridgeReader.currentData
+    currentData = getReading(step)
 
     if currentData is None:
         return False
 
     # chargeDischarge scheint Positiv Batterie laden zu sein, negativ entladen
-    chargeDischarge = currentData["storage_charge_discharge_power"].value
-    soc = currentData["storage_state_of_capacity"].value
+    chargeDischarge = currentData["result"]["batteryPower"]
+    soc = currentData["result"]["batterySoc"]
+
+    if abs(chargeDischarge) < 50:
+        return False
     
     if soc >= 85.0 and chargeDischarge == 0:
         return False

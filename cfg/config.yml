@@ -15,8 +15,10 @@ show:
     uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
   - pv:
     name: "pv"
+    evcc-uri: "http://192.168.50.253:7070/api/state"
   - battery:
     name: "battery"
+    evcc-uri: "http://192.168.50.253:7070/api/state"
   - em3:
     name: "em3"
     uri: "http://192.168.50.179/status"
@@ -42,7 +44,3 @@ show:
 ulanzi:
   uri: http://192.168.50.131/api/screen
   info: http://192.168.50.131/api/matrixinfo
-pv:
-  host: "192.168.50.196"
-  port: 502
-  slave_id: 1
