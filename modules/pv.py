@@ -76,7 +76,7 @@ def update(config, step):
     max_element = max(data["result"]["pv"], key=lambda x: x["power"])
     input_power = max_element["power"]
 
-    if input_power == 0:
+    if abs(input_power) < 3:
         return False
     
     value = formatValue(input_power)
