@@ -73,7 +73,8 @@ def update(config, step):
     if data is None:
         return False
     
-    input_power = data["result"]["pvPower"]
+    max_element = max(data["result"]["pv"], key=lambda x: x["power"])
+    input_power = max_element["power"]
 
     if input_power == 0:
         return False

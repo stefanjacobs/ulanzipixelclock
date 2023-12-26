@@ -46,6 +46,7 @@ def updateUlanzi(config, text):
 
 VW_USERNAME=os.getenv("VW_USER")
 VW_PASSWORD=os.getenv("VW_PASS")
+VW_VIN=os.getenv("VW_VIN")
 
 counter = 0
 
@@ -64,11 +65,11 @@ def update(config, step):
 
     match counter:
         case 0: # show soc
-            soc_pct = weConnect.vehicles["WVWZZZE18R8000765"].domains["measurements"]["fuelLevelStatus"].currentSOC_pct.value
+            soc_pct = weConnect.vehicles[VW_VIN].domains["measurements"]["fuelLevelStatus"].currentSOC_pct.value
             updateUlanzi(config, str(soc_pct) + "%")
             return True
         case 1: # show range
-            range_km = weConnect.vehicles["WVWZZZE18R8000765"].domains["measurements"]["rangeStatus"].electricRange.value
+            range_km = weConnect.vehicles[VW_VIN].domains["measurements"]["rangeStatus"].electricRange.value
             updateUlanzi(config, str(range_km) + "km")
             return True
         case _:
