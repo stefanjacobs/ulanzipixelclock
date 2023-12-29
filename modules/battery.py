@@ -78,6 +78,18 @@ def formatValue(val):
     return value, color
 
 
+def formatSOC(soc, val):
+    val = round(val)
+    # check color of reading
+    color = GREEN
+    if val >= 0:
+        color = ORANGE
+    
+    # format watt string
+    soc = str(soc) + "%"
+    return soc, color
+
+
 def getReading(step):
     response = None
     response = requests.get(step["evcc-uri"])
@@ -85,8 +97,12 @@ def getReading(step):
     response = json.loads(response.text)
     return response
 
+batcounter = 0
 
 def update(config, step):
+
+    global batcounter
+    batcounter = (batcounter + 1) % 2
 
     currentData = getReading(step)
 
@@ -119,14 +135,18 @@ def update(config, step):
         pic = AKKU_30
     else:
         pic = AKKU_10
-
-    value, color = formatValue(chargeDischarge)
-    updateUlanzi(config, value, color, pic)
-    return True
     
-    # zeige batterie daten an:
-    # orange %-Zahl bei discharge oder <20% soc
-    # bei discharge oder 0 und <= 5% --> skip
-    # grüne %-Zahl bei charge 
-    # bei charge oder 0 und >= 80% --> skip
+    
+    match batcounter:
+        case 0: # show soc
+            value, color = formatSOC(soc, chargeDischarge)
+            updateUlanzi(config, value, color, pic)
+            return True
+        case 1: # show current power
+            value, color = formatValue(chargeDischarge)
+            updateUlanzi(config, value, color, pic)
+            return True
+        case _:
+            pass
 
+    return False
