@@ -1,7 +1,7 @@
 import ics, datetime, requests
 
 
-filename = "cfg/abfuhrtermine-2023.ics"
+filename = "cfg/abfuhrtermine-2024.ics"
 with open(filename, 'r') as file:
     data = file.read()
 calendar = ics.Calendar(data)
