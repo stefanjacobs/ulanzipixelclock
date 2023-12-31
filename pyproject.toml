@@ -13,6 +13,7 @@ ics = "^0.7.2"
 pytz = "^2023.3"
 weconnect = "^0.59.5"
 python-dotenv = "^1.0.0"
+astral = "^3.2"
 
 
 [build-system]
