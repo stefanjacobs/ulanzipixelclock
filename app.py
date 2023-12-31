@@ -83,12 +83,12 @@ def mainloop(config: Config):
                 wait(sleepInterval)
                 continue
 
-            log.info("Stepping into " + steps[current]["name"])
+            # log.info("Stepping into " + steps[current]["name"])
             result = singlestep(config, steps[current])
             if result == True:
                 wait(config.get("showtime"))
             else:
-                log.info("Skipping " + steps[current]["name"])
+                # log.info("Skipping " + steps[current]["name"])
                 pass
         except Exception as e:
             log.error(e)
