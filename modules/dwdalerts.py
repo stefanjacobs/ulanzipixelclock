@@ -53,6 +53,9 @@ def update(config, step):
     if now - DWD.last_update > datetime.timedelta(minutes=15):
         DWD.update()
     
+    if not DWD.data_valid:
+        return False
+    
     headlines = ""
     color = None
 
