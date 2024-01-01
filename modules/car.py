@@ -1,4 +1,4 @@
-import requests, os, logging
+import requests, os, logging, datetime
 from weconnect import weconnect
 
 GREEN = "#32612D"
@@ -48,22 +48,30 @@ VW_USERNAME=os.getenv("VW_USER")
 VW_PASSWORD=os.getenv("VW_PASS")
 VW_VIN=os.getenv("VW_VIN")
 
-counter = 0
+carcounter = 0
 
 LOG = logging.getLogger("weconnect")
 LOG.setLevel(logging.ERROR)
 
 weConnect = weconnect.WeConnect(username=VW_USERNAME, password=VW_PASSWORD, updateAfterLogin=False, loginOnInit=True, maxAge=300)
+now = datetime.datetime.now(datetime.timezone.utc)
+lastUpdate = now - datetime.timedelta(minutes=16)
 
 
 def update(config, step):
 
-    global counter
-    counter = (counter + 1) % 2
+    global carcounter
+    carcounter = (carcounter + 1) % 2
 
-    weConnect.update(updatePictures=False, updateCapabilities=False)
+    global lastUpdate
+    now = datetime.datetime.now(datetime.timezone.utc)
 
-    match counter:
+    if now - lastUpdate > datetime.timedelta(minutes=15):
+        print("Query Car now!")
+        weConnect.update(updatePictures=False, updateCapabilities=False)
+        lastUpdate = now
+
+    match carcounter:
         case 0: # show soc
             soc_pct = weConnect.vehicles[VW_VIN].domains["measurements"]["fuelLevelStatus"].currentSOC_pct.value
             updateUlanzi(config, str(soc_pct) + "%")
@@ -73,7 +81,4 @@ def update(config, step):
             updateUlanzi(config, str(range_km) + "km")
             return True
         case _:
-            pass
-
-    
-    return False
+            return False

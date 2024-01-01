@@ -35,8 +35,8 @@ def updateUlanzi(config, pic):
     return
 
 
-LATITUDE = os.getenv("SUNSET_LATITUDE")
-LONGITUDE = os.getenv("SUNSET_LONGITUDE")
+LATITUDE = os.getenv("HOME_LATITUDE")
+LONGITUDE = os.getenv("HOME_LONGITUDE")
 
 CITY = LocationInfo("Berlin", "Germany", "Europe/Berlin", LATITUDE, LONGITUDE)
 TIMEZONE = zoneinfo.ZoneInfo("Europe/Berlin")

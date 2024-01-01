@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-
 load_dotenv()
 
 import logging, datetime, pytz
@@ -18,6 +17,7 @@ import modules.battery as battery
 import modules.wallbox as wallbox
 import modules.car as car
 import modules.sunset as sunset
+import modules.dwdalerts as dwdalerts
 
 
 logging.basicConfig(
@@ -42,6 +42,7 @@ def singlestep(config, step):
         case "washing":     return washing.update(config, step)
         case "clock":       return clock.update(config)
         case "sunset":      return sunset.update(config, step)
+        case "dwdalerts":   return dwdalerts.update(config, step)
         case _:
             log.error(
                 "Something strange happened, the singlestep failed and no exception was thrown"

@@ -1,4 +1,4 @@
-log-level: DEBUG # WARNING, DEBUG
+log-level: WARN # ERROR, WARN, INFO, DEBUG
 timeout: 10
 showtime: 30
 uptime:
@@ -10,6 +10,9 @@ uptime:
     minute: 00
   sleepinterval: 120
 show:
+  - dwdalerts:
+    name: "dwdalerts"
+    vis-min-level: 3 # warning levels between 0 and 4
   - bkw:
     name: "bkw"
     uri: "http://192.168.50.80/rpc/Shelly.GetStatus"
@@ -43,6 +46,7 @@ show:
     name: "sunset"
   - clock:
     name: "clock"
+
 ulanzi:
   uri: http://192.168.50.131/api/screen
   info: http://192.168.50.131/api/matrixinfo
