@@ -67,7 +67,6 @@ def update(config, step):
     now = datetime.datetime.now(datetime.timezone.utc)
 
     if now - lastUpdate > datetime.timedelta(minutes=15):
-        print("Query Car now!")
         weConnect.update(updatePictures=False, updateCapabilities=False)
         lastUpdate = now
 

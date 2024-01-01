@@ -51,7 +51,6 @@ def update(config, step):
     minVisLevel = step["vis-min-level"]
     now = datetime.datetime.now(datetime.timezone.utc)
     if now - DWD.last_update > datetime.timedelta(minutes=15):
-        print("Query DWD now!")
         DWD.update()
     
     headlines = ""
