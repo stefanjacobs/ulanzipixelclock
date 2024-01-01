@@ -39,6 +39,8 @@ show:
     wash-uri: "http://192.168.50.2/rpc/Shelly.GetStatus"
     power-off-threshold: 1    # Watts
     idle-threshold: 10        # Watts
+  - sunset:
+    name: "sunset"
   - clock:
     name: "clock"
 ulanzi:
