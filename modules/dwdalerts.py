@@ -61,14 +61,14 @@ def update(config, step):
 
     # todo max-level warning and color setting
     for warning in DWD.expected_warnings:
-        if warning.level >= minVisLevel:
-            headlines += warning.headline + " - "
-            color = warning.color
+        if warning["level"] >= minVisLevel:
+            headlines += warning["headline"] + " - "
+            color = warning["color"]
 
     for warning in DWD.current_warnings:
-        if warning.level >= minVisLevel:
-            headlines += warning.headline + " - "
-            color = warning.color
+        if warning["level"] >= minVisLevel:
+            headlines += warning["headline"] + " - "
+            color = warning["color"]
 
     if headlines != "":
         updateUlanzi(config, headlines, color)
