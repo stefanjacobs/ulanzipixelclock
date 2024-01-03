@@ -60,15 +60,17 @@ lastUpdate = now - datetime.timedelta(minutes=16)
 
 def update(config, step):
 
-    global carcounter
+    global carcounter, lastUpdate
     carcounter = (carcounter + 1) % 2
 
-    global lastUpdate
     now = datetime.datetime.now(datetime.timezone.utc)
-
-    if now - lastUpdate > datetime.timedelta(minutes=15):
-        weConnect.update(updatePictures=False, updateCapabilities=False)
-        lastUpdate = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        if now - lastUpdate > datetime.timedelta(minutes=15):
+            weConnect.update(updatePictures=False, updateCapabilities=False)
+            lastUpdate = datetime.datetime.now(datetime.timezone.utc)
+    except:
+        lastUpdate = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=15)
+        return False
 
     match carcounter:
         case 0: # show soc
