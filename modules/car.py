@@ -68,7 +68,7 @@ def update(config, step):
 
     if now - lastUpdate > datetime.timedelta(minutes=15):
         weConnect.update(updatePictures=False, updateCapabilities=False)
-        lastUpdate = now
+        lastUpdate = datetime.datetime.now(datetime.timezone.utc)
 
     match carcounter:
         case 0: # show soc
