@@ -48,6 +48,7 @@ DWD = DwdWeatherWarningsAPI((LATITUDE, LONGITUDE))
 
 
 def update(config, step):
+    global DWD, LATITUDE, LONGITUDE
     minVisLevel = step["vis-min-level"]
 
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -78,6 +79,7 @@ def update(config, step):
                 maxLevel = warning["level"]
 
     if headlines != "":
+        headlines = headlines[0:-2]
         updateUlanzi(config, headlines, color)
         return True
     
