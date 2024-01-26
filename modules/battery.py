@@ -128,9 +128,9 @@ def update(config, step):
             colorcounter += 1
 
     # if the soc is less than X, replace colors away from green
-    if soc < 38:
+    if soc > 18 and soc < 38:
         pic = [AKKU_YELLOW if x==AKKU_GREEN else x for x in pic]
-    elif soc < 16:
+    elif soc <= 18:
         pic = [AKKU_ORANGE if x==AKKU_GREEN else x for x in pic]
     
     match batcounter:
