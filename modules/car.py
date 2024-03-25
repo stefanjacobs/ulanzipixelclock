@@ -68,7 +68,7 @@ def update(config, step):
         if now - lastUpdate > datetime.timedelta(minutes=15):
             weConnect.update(updatePictures=False, updateCapabilities=False)
             lastUpdate = datetime.datetime.now(datetime.timezone.utc)
-    except:
+    except Exception as e:
         lastUpdate = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=15)
         return False
 
