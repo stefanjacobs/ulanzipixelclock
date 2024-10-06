@@ -54,3 +54,7 @@ Wenn heute und morgen kein Müll fällig ist, wird nichts angezeigt. Der Müll f
 
 ![Beispielbild der Mülltonne](./docs/pics/trash.png)
 
+# Kontakt
+
+[Twitter](https://x.com/stefanj78)
+
