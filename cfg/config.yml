@@ -44,6 +44,8 @@ show:
     idle-threshold: 10        # Watts
   - sunset:
     name: "sunset"
+  # - forecast:
+  #   name: "forecast"
   - clock:
     name: "clock"
 
