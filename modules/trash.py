@@ -1,7 +1,9 @@
 import ics, datetime, requests
 
+# Get the current year
+current_year = datetime.datetime.now().year
 
-filename = "cfg/abfuhrtermine-2024.ics"
+filename = "cfg/abfuhrtermine-" + str(current_year) + ".ics"
 with open(filename, 'r') as file:
     data = file.read()
 calendar = ics.Calendar(data)
