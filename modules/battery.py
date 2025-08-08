@@ -103,8 +103,8 @@ def update(config, step):
         return False
 
     # chargeDischarge scheint Positiv Batterie laden zu sein, negativ entladen
-    chargeDischarge = currentData["result"]["batteryPower"]
-    soc = currentData["result"]["batterySoc"]
+    chargeDischarge = currentData["batteryPower"]
+    soc = currentData["batterySoc"]
 
     if abs(chargeDischarge) < 50:
         return False

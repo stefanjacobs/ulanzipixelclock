@@ -63,7 +63,7 @@ def formatValue(val):
 
 def update(config, step):
     reading = getWattReading(step)
-    chargePower = reading["result"]["loadpoints"][0]["chargePower"]
+    chargePower = reading["loadpoints"][0]["chargePower"]
 
     if chargePower == 0:
         return False
