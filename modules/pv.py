@@ -1,10 +1,4 @@
 import requests, json
-# import threading, time
-from datetime import datetime
-# from huawei_solar import HuaweiSolarBridge
-# import huawei_solar
-# import asyncio
-
 
 GREEN = "#32612D"
 

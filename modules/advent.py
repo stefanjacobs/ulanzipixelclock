@@ -51,9 +51,15 @@ def updateUlanzi(config, pic):
 
 def first_advent(year):
     """Berechnet das Datum des ersten Advents für ein bestimmtes Jahr"""
-    first_day_of_advent = datetime.date(year=year, month=12, day=1)
-    days_until_first_sunday = 6 - first_day_of_advent.weekday()
-    first_advent = first_day_of_advent + datetime.timedelta(days=days_until_first_sunday)
+    # Der 1. Advent ist der 4. Sonntag vor dem 25. Dezember
+    christmas = datetime.date(year=year, month=12, day=25)
+    # Finde den Sonntag vor oder am 24. Dezember (4. Advent)
+    fourth_advent = christmas - datetime.timedelta(days=1)
+    # Gehe zurück zum vorherigen Sonntag, falls der 24. kein Sonntag ist
+    days_back = (fourth_advent.weekday() + 1) % 7
+    fourth_advent = fourth_advent - datetime.timedelta(days=days_back)
+    # Der 1. Advent ist 3 Wochen (21 Tage) vor dem 4. Advent
+    first_advent = fourth_advent - datetime.timedelta(days=21)
     return first_advent
 
 
