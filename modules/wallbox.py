@@ -49,6 +49,22 @@ def getWattReading(step):
     response = json.loads(response.text)
     return response
 
+
+def getChargePower(reading):
+    loadpoints = reading.get("loadpoints")
+    if isinstance(loadpoints, list) and loadpoints:
+        loadpoint = loadpoints[0]
+        if isinstance(loadpoint, dict):
+            charge_power = loadpoint.get("chargePower")
+            if charge_power is not None:
+                return charge_power
+
+            power = loadpoint.get("power")
+            if power is not None:
+                return power
+
+    return None
+
 def formatValue(val):
     val = round(val)
     # check, if W or kW
@@ -63,7 +79,9 @@ def formatValue(val):
 
 def update(config, step):
     reading = getWattReading(step)
-    chargePower = reading["loadpoints"][0]["chargePower"]
+    chargePower = getChargePower(reading)
+    if chargePower is None:
+        return False
 
     if chargePower == 0:
         return False

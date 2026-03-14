@@ -61,14 +61,33 @@ def getReading(step):
     return response
 
 
+def getPvPower(data):
+    pv_meters = data.get("pv")
+    if isinstance(pv_meters, list) and pv_meters:
+        valid_meters = [meter for meter in pv_meters if isinstance(meter, dict) and meter.get("power") is not None]
+        if valid_meters:
+            return max(valid_meters, key=lambda meter: meter["power"])["power"]
+
+    site = data.get("site")
+    if isinstance(site, dict):
+        pv = site.get("pv")
+        if isinstance(pv, dict):
+            power = pv.get("power")
+            if power is not None:
+                return power
+
+    return None
+
+
 def update(config, step):
 
     data = getReading(step)
     if data is None:
         return False
-    
-    max_element = max(data["pv"], key=lambda x: x["power"])
-    input_power = max_element["power"]
+
+    input_power = getPvPower(data)
+    if input_power is None:
+        return False
 
     if abs(input_power) < 3:
         return False

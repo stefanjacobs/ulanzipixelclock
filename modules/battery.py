@@ -90,6 +90,31 @@ def getReading(step):
     response = json.loads(response.text)
     return response
 
+
+def getBatteryState(currentData):
+    battery = currentData.get("battery")
+    if isinstance(battery, dict):
+        power = battery.get("power")
+        soc = battery.get("soc")
+        if power is not None and soc is not None:
+            return power, soc
+
+    site = currentData.get("site")
+    if isinstance(site, dict):
+        battery = site.get("battery")
+        if isinstance(battery, dict):
+            power = battery.get("power")
+            soc = battery.get("soc")
+            if power is not None and soc is not None:
+                return power, soc
+
+    power = currentData.get("batteryPower")
+    soc = currentData.get("batterySoc")
+    if power is not None and soc is not None:
+        return power, soc
+
+    return None, None
+
 batcounter = 0
 
 def update(config, step):
@@ -103,8 +128,9 @@ def update(config, step):
         return False
 
     # chargeDischarge scheint Positiv Batterie laden zu sein, negativ entladen
-    chargeDischarge = currentData["batteryPower"]
-    soc = currentData["batterySoc"]
+    chargeDischarge, soc = getBatteryState(currentData)
+    if chargeDischarge is None or soc is None:
+        return False
 
     if abs(chargeDischarge) < 50:
         return False
